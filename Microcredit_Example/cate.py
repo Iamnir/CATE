@@ -24,7 +24,7 @@ df.drop(columns=["loansamt_total"], inplace=True)
 df["d"] = df["treatment"]
 df.drop(columns=["treatment"], inplace=True)
 
-# covariates (same as your R code)
+# covariates 
 covariates = [
     "members_resid_bl", "nadults_resid_bl", "head_age_bl", "act_livestock_bl", "act_business_bl",
     "borrowed_total_bl", "members_resid_d_bl", "nadults_resid_d_bl", "head_age_d_bl", "act_livestock_d_bl",
@@ -54,8 +54,6 @@ print(f"Number of observations after cleaning: {len(df)}")
 
 def create_bootstrapped_data(df_source):
     """
-    Sample with replacement *within d=0 and d=1* to preserve treatment ratio.
-    This matches your R code's createbootstrappedData().
     """
     df0 = df_source[df_source["d"] == 0]
     df1 = df_source[df_source["d"] == 1]
@@ -90,9 +88,9 @@ results_cate_IPW = np.zeros((n, B))
 ################################################################################
 
 for f_idx, (train_index, test_index) in enumerate(folds, start=1):
-    # data1 in R code
+   
     data1 = df.iloc[train_index].copy()
-    # df_main in R code
+   
     df_main = df.iloc[test_index].copy()
 
     for b in range(1, B + 1):
@@ -104,7 +102,7 @@ for f_idx, (train_index, test_index) in enumerate(folds, start=1):
         df_aux = create_bootstrapped_data(data1)
 
         # 4.2) Fit a classification model to get the propensity scores, p_hat
-        #     (R code used SuperLearner(..., family=binomial)). We'll use logistic regression for simplicity.
+        #     (R code use SuperLearner in Daniel Jacob's approach (..., family=binomial)). We'll use logistic regression for simplicity.
 
         X_aux = df_aux[covariates].values
         d_aux = df_aux["d"].values
