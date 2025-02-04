@@ -17,11 +17,7 @@ from sklearn.ensemble import RandomForestRegressor
 # df, meta = pyreadstat.read_dta("H:/data_rep.dta")  # or use pd.read_stata
 df = pd.read_stata("H:/data_rep.dta")
 
-# The R code:
-# data$y <- data$loansamt_total
-# data$loansamt_total <- NULL
-# data$d <- data$treatment
-# data$treatment <- NULL
+
 df["y"] = df["loansamt_total"]
 df.drop(columns=["loansamt_total"], inplace=True)
 
